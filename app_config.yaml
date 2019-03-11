@@ -1,0 +1,5 @@
+env: prod
+  detector:
+    smoother:
+      kernel_size: 5
+      sigma: 1
