@@ -16,22 +16,44 @@
 """
 Main entry point to the program.
 """
-import cv2 as cv
+import cv2
+import numpy as np
 
-from src.utilities.imagery import convert_to_grayscale
 
-if __name__ == '__main__':
-    im = cv.imread('test/resources/sudoku_1.png')
-    imgray = convert_to_grayscale(im)
+def image_lines():
+    img = cv2.imread("test/resources/sudoku_newspaper.jpeg")
 
-    ret, thresh = cv.threshold(imgray, 127, 255, 0)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(gray, 90, 150, apertureSize=3)
+    kernel = np.ones((3, 3), np.uint8)
+    edges = cv2.dilate(edges, kernel, iterations=1)
+    kernel = np.ones((3, 3), np.uint8)
+    edges = cv2.erode(edges, kernel, iterations=1)
+    lines = cv2.HoughLines(edges, 1, np.pi / 180, 150)
 
-    contours, hierarchy = cv.findContours(thresh, cv.RETR_EXTERNAL,
-                                          cv.CHAIN_APPROX_SIMPLE)
-    cv.drawContours(im, contours, -1, (0, 255, 0), 3)
-    cv.imshow('img', im)
+    for line in lines:
+        for rho, theta in line:
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a * rho
+            y0 = b * rho
+            x1 = int(x0 + 1000 * (-b))
+            y1 = int(y0 + 1000 * (a))
+            x2 = int(x0 - 1000 * (-b))
+            y2 = int(y0 - 1000 * (a))
 
-    k = cv.waitKey()
+            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+    cv2.imshow('img', img)
+    cv2.imshow('edges', edges)
+
+    k = cv2.waitKey()
 
     if k == 27:
-        cv.destroyAllWindows()
+        cv2.destroyAllWindows()
+
+
+if __name__ == '__main__':
+    image_lines()
+

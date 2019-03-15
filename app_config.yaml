@@ -1,5 +1,10 @@
-env: prod
-  detector:
-    smoother:
-      kernel_size: 5
-      sigma: 1
+name: sudokuhelper
+version: 0.1
+detector:
+  smoother:
+    kernel_size: 5
+    sigma: 1
+  canny_detector:
+    l_threshold: 90
+    u_threshold: 150
+    aperture_size: 3

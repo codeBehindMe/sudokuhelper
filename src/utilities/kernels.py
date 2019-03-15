@@ -12,15 +12,24 @@
 
 # You should have received a copy of the GNU General Public License
 # along with sudokuhelper.  If not, see <https://www.gnu.org/licenses/>.
+"""
+Factory for creating kernels.
+"""
+import numpy as np
+
+_default_dtype = np.uint8
+_kernel_dtype = np.uint8
 
 
-class TestImagery:
+def square_kernel(size: int):
+    """
+    Returns a square kernel.
+    Args:
+        size: Size of the kernel
 
-    def test_cast_image_to_gray_return(self):
-        """
-        Check's that the return value of an image after being casted to gray
-        has only a single channel and values are between the 0-255.
-        Returns:
+    Returns:
 
-        """
-        pass
+    """
+    return np.ones(shape=(size, size), dtype=_kernel_dtype)
+
+

@@ -17,25 +17,33 @@
 Detect's the Sudoku matrix on images.
 """
 
-import cv2 as cv
+import cv2
+
+from src.utilities.imagery import KernelFactory
+from src.utilities.imagery import convert_to_grayscale
 
 
 class SudokuDetector:
 
-    def __init__(self, k_size: (int, int), sigma_x: float):
+    def __init__(self, k_size: (int, int), sigma_x: float, l_threshold: int,
+                 u_threshold: int, aperture_size: int):
+        self.aperture_size = aperture_size
+        self.l_threshold = l_threshold
+        self.u_threshold = u_threshold
         self.k_size = k_size
         self.sigma_x = sigma_x
+        self.kernel_factory = KernelFactory()
 
     def get_sudoku_contours_from_image(self, img: object):
         """
-        Get's the sudoku contours from the image.
+        Get's the sudoku grid lines from the image.
         Args:
             img: Image to be processed
 
         Returns:
 
         """
-        blur = cv.GaussianBlur(img, self.k_size, self.sigma_x)
-        ret_val, thresh = cv.threshold(blur, 0, 255,
-                                       cv.THRESH_BINARY + cv.THRESH_OTSU)
-
+        img = convert_to_grayscale(img)
+        blur = cv2.GaussianBlur(img, self.k_size, self.sigma_x)
+        edges = cv2.Canny(blur, self.l_threshold, self.u_threshold,
+                          apertureSize=self.aperture_size)

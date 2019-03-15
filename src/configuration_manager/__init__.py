@@ -12,15 +12,3 @@
 
 # You should have received a copy of the GNU General Public License
 # along with sudokuhelper.  If not, see <https://www.gnu.org/licenses/>.
-
-
-class TestImagery:
-
-    def test_cast_image_to_gray_return(self):
-        """
-        Check's that the return value of an image after being casted to gray
-        has only a single channel and values are between the 0-255.
-        Returns:
-
-        """
-        pass

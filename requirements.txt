@@ -2,3 +2,4 @@ ortools
 opencv-python
 pytest
 numpy
+pyyaml

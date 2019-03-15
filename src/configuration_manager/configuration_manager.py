@@ -13,14 +13,34 @@
 # You should have received a copy of the GNU General Public License
 # along with sudokuhelper.  If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Manages the program configuration.
 
-class TestImagery:
+All objects in this module should be static.
+"""
 
-    def test_cast_image_to_gray_return(self):
-        """
-        Check's that the return value of an image after being casted to gray
-        has only a single channel and values are between the 0-255.
-        Returns:
+import yaml
 
-        """
-        pass
+from src.utilities.constants import APP_CONFIG_PATH
+
+
+class ConfigurationManager:
+    """
+    Configuration manager for the application.
+
+    Gives dot access to the attributes in the configuration.
+    """
+
+    def __init__(self):
+        with open(APP_CONFIG_PATH, 'r') as f:
+            self.app_config = yaml.load(f)
+        super().__init__()
+
+    def __getattr__(self, item: str):
+        return self.app_config[item]
+
+    def __getitem__(self, item: str) -> object:
+        return self.app_config[item]
+
+
+app_config = ConfigurationManager()

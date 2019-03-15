@@ -17,7 +17,10 @@
 Contains utilities around images.
 """
 
+from functools import wraps
+
 import cv2
+import numpy as np
 
 
 def convert_to_grayscale(img: object) -> object:
@@ -51,3 +54,5 @@ def detect_grid(img: object, k_size: (int, int), t_low: int, t_high: int,
 
     edges = cv2.Canny(image=blur, threshold1=t_low, threshold2=t_high,
                       apertureSize=aperture_size)
+
+
