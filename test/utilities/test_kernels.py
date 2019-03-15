@@ -12,38 +12,25 @@
 
 # You should have received a copy of the GNU General Public License
 # along with sudokuhelper.  If not, see <https://www.gnu.org/licenses/>.
+
 """
-This module provides image pre-processing for the detector. It is responsible
-for carrying out image adjustments prior to detection happens.
+Contains the test for kernels
 """
 
-import cv2
+import numpy as np
 
-from src.utilities.imagery import convert_to_grayscale
+from src.utilities.kernels import square_kernel
 
 
-class ImagePreprocessor:
+class TestKernels:
 
-    def __init__(self, image: object):
-        self.image = image
-        self.output = image
-
-    def initial_pass(self, g_kernel_size: (int, int)):
+    def test_square_kernel(self):
         """
-        Takes an initial pass of processing the image for line detection.
-
+        Check's to see that the square kernel's behaviour is as expected.
         Returns:
 
         """
+        k = square_kernel(4)
 
-        self.output = convert_to_grayscale(self.output)
-        self.output = cv2.GaussianBlur(self.output)
-
-    def get_output(self):
-        """
-        Returns processed image.
-        Returns:
-
-        """
-
-        return self.output
+        assert k.shape == (4, 4)
+        assert k.dtype == np.uint8
