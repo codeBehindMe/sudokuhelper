@@ -23,4 +23,4 @@ class TestImagery:
         Returns:
 
         """
-        pass
+        raise NotImplementedError()
