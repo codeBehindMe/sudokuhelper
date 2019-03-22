@@ -19,16 +19,18 @@ Main entry point to the program.
 import cv2
 import numpy as np
 
+from src.utilities.kernels import square_kernel
+
 
 def image_lines():
     img = cv2.imread("test/resources/sudoku_newspaper.jpeg")
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    gray = cv2.GaussianBlur(gray, (3, 3), 0)
     edges = cv2.Canny(gray, 90, 150, apertureSize=3)
-    kernel = np.ones((3, 3), np.uint8)
+    kernel = square_kernel(3)
     edges = cv2.dilate(edges, kernel, iterations=1)
-    kernel = np.ones((3, 3), np.uint8)
+    kernel = square_kernel(2)
     edges = cv2.erode(edges, kernel, iterations=1)
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 150)
 
@@ -54,6 +56,34 @@ def image_lines():
         cv2.destroyAllWindows()
 
 
-if __name__ == '__main__':
-    image_lines()
+def blob_detection():
+    # Read image
+    im = cv2.imread("test/resources/sudoku_newspaper.jpeg")
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
+    # Set up the detector with default parameters.
+    params = cv2.SimpleBlobDetector_Params()
+    params.filterByCircularity = True
+    params.minCircularity = 0.73
+    detector = cv2.SimpleBlobDetector_create(params)
+
+    # Detect blobs.
+    keypoints = detector.detect(im)
+
+    # Draw detected blobs as red circles.
+    # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
+    # im_with_keypoints = cv2.drawMatches(im, keypoints, np.array([]),
+    #                                     (0, 0, 255),
+    #                                     cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    im_with_keypoints = cv2.drawKeypoints(im, keypoints, None,
+                                          flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    # Show keypoints
+    cv2.imshow("Keypoints", im_with_keypoints)
+    cv2.waitKey(0)
+
+
+if __name__ == '__main__':
+    # image_lines()
+    blob_detection()
